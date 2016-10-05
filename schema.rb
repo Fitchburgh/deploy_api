@@ -22,7 +22,7 @@ class CreateStudentsTable < ActiveRecord::Migration[5.0]
     create_table :students do |t|
       # belongs_to :colleges
       t.string :student_name
-      t.integer :years_completed
+      t.integer :years_completed, default: 0
       t.integer :college_id
     end
   end
@@ -46,6 +46,19 @@ class CreateCollegesTable < ActiveRecord::Migration[5.0]
   end
 end
 
+class CreateSemestersTable < ActiveRecord::Migration[5.0]
+  def up
+    create_join_table :professor, :students, table_name: :semesters do |t|
+      # t.index :college_id
+      t.references :professor, index: true, foreign_key: true
+      t.references :student, index: true, foreign_key: true
+    end
+  end
+  def down
+    drop_table :semesters
+  end
+end
+
 def main
   action = (ARGV[0] || :up).to_sym
   CreateProfessorsTable.migrate(action)
@@ -55,6 +68,9 @@ def main
 
   action = (ARGV[2] || :up).to_sym
   CreateCollegesTable.migrate(action)
+
+  action = (ARGV[3] || :up).to_sym
+  CreateSemestersTable.migrate(action)
 end
 
 main if __FILE__ == $PROGRAM_NAME
