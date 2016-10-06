@@ -4,7 +4,6 @@ require_relative 'environment'
 class CreateProfessorsTable < ActiveRecord::Migration[5.0]
   def up
     create_table :professors do |t|
-      # belongs_to :colleges
       t.string :prof_name
       t.integer :years_experience
       t.integer :college_id
@@ -20,7 +19,6 @@ end
 class CreateStudentsTable < ActiveRecord::Migration[5.0]
   def up
     create_table :students do |t|
-      # belongs_to :colleges
       t.string :student_name
       t.integer :years_completed, default: 0
       t.integer :college_id
@@ -35,7 +33,7 @@ end
 #
 class CreateCollegesTable < ActiveRecord::Migration[5.0]
   def up
-    create_table :colleges do |t| #create_join_table
+    create_table :colleges do |t| # create_join_table
       t.string :college_name
       t.integer :ranking
     end
@@ -46,15 +44,17 @@ class CreateCollegesTable < ActiveRecord::Migration[5.0]
   end
 end
 
+#
 class CreateSemestersTable < ActiveRecord::Migration[5.0]
   def up
     create_join_table :professor, :students, table_name: :semesters do |t|
       # t.index :college_id
       t.references :professor, index: true, foreign_key: true
       t.references :student, index: true, foreign_key: true
-      t.string :class_name
+      t.string :class_name, index: true
     end
   end
+
   def down
     drop_table :semesters
   end

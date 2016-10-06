@@ -5,7 +5,7 @@ require_relative 'semester'
 require 'sinatra'
 require 'pry'
 
-get '/api//all/professors' do
+get '/api/all/professors' do
   Professor.all.to_json
 end
 
@@ -29,44 +29,60 @@ post '/api/add/student' do
   'end 400'
 end
 
-post '/api/semester' do
-  Semester.create(professor_id: params['professor_id'], student_id: params['student_id'], class_name: params['class_name']).to_json
+post '/api/semester/' do
+  Semester.create(
+    professor_id: params['professor_id'],
+    student_id: params['student_id'],
+    class_name: params['class_name']
+  ).to_json
 end
 
+get '/api/student_names_by_class/:class_name' do
+  Student.find_by(
+    Semester.where(class_name: params['class_name']).class_name
+  ).to_json
+end
+
+# Get student information
 get '/api/student/:student_id' do
-  Student.find(Semester.where(student_id: params['student_id']).first.student_id).to_json
+  Student.find(
+    Semester.where(student_id: params['student_id']).first.student_id
+  ).to_json
 end
 
 # get 'api/semester/:professor_id' do
-#   Professor.find(Semester.where(professor_id: params['professor_id']).first.professor_id).to_json
+#   Professor.find(Semester.where(professor_id: params['professor_id']).first.
+#   professor_id).to_json
 # end
 
-get '/api/professor/:professor_id' do
-  prof = Semester.where(professor_id: params['professor_id']).to_json
-  prof
+# enter in professor ID as a requirement, and class name as a ?class_name=x
+get '/api/class_list/:professor_id/' do
+  Semester.where(
+    professor_id: params['professor_id'],
+    class_name: params['class_name']
+  ).to_json
 end
 
-get '/api/professors' do
-  prof_id = params[:professor_id]
+# get '/api/professors' do
+#   prof_id = params[:professor_id]
+#
+#   class_name = params[:class_name]
+#
+#   professors = Professor.all
 
-  class_name = params[:class_name]
-
-  professors = Professor.all
-
-  unless prof_id.nil?
-    professors = professors.where(id = prof_id)
-    puts "hi"
-# not getting into these unless statements.
-  end
-
-  unless class_name.nil?
-    professors = professors.where(class_name = class_name)
-    puts "hellos"
-
-  end
-
-  professors.to_json
-end
+#   unless prof_id.nil?
+#     professors = professors.where(id = prof_id)
+#     puts 'hi'
+#     # not getting into these unless statements.
+#   end
+#
+#   unless class_name.nil?
+#     professors = professors.where(class_name = class_name)
+#     puts 'hellos'
+#
+#   end
+#   professors.to_json
+# end
 
 put '/api/update_years/:id' do
   student = Student.find_by(id: params[:id])
@@ -78,10 +94,12 @@ delete '/api/delete/:id' do
   student.destroy
 end
 
-# Semester.where(professor_id: params['professor_id'], class_name: params['class_name'])
+# Semester.where(professor_id: params['professor_id'],
+# class_name: params['class_name'])
 
 # get '/api/semester_by_prof' do
-#   Semester.where(professor_id: params['professor_id'], class_name: params['class_name'])
+#   Semester.where(professor_id: params['professor_id'],
+#   class_name: params['class_name'])
 # end
 
 # get '/' do
