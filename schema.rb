@@ -52,6 +52,7 @@ class CreateSemestersTable < ActiveRecord::Migration[5.0]
       # t.index :college_id
       t.references :professor, index: true, foreign_key: true
       t.references :student, index: true, foreign_key: true
+      t.string :class_name
     end
   end
   def down

@@ -2,6 +2,7 @@ require_relative 'environment'
 require_relative 'student'
 require_relative 'professor'
 require_relative 'college'
+require_relative 'semester'
 
 def main
   uc = College.create(
@@ -36,6 +37,12 @@ def main
     student_name: 'Nate',
     years_completed: 3,
     college_id: 1
+  )
+
+  biology = Semester.create(
+  professor_id: 1,
+  student_id: 2,
+  class_name: 'Biology'
   )
 end
 
