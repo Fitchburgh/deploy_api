@@ -56,7 +56,7 @@ get '/api/professors' do
   unless prof_id.nil?
     professors = professors.where(id = prof_id)
     puts "hi"
-
+# not getting into these unless statements.
   end
 
   unless class_name.nil?
@@ -66,6 +66,16 @@ get '/api/professors' do
   end
 
   professors.to_json
+end
+
+put '/api/update_years/:id' do
+  student = Student.find_by(id: params[:id])
+  student.update(years_completed: params[:years_completed]).to_json
+end
+
+delete '/api/delete/:id' do
+  student = Student.find_by(id: params[:id])
+  student.destroy
 end
 
 # Semester.where(professor_id: params['professor_id'], class_name: params['class_name'])
